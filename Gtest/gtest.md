@@ -1,32 +1,12 @@
 # 2024.1.15
 * 安装gtest
 ```bash
-[root@localhost src_test]# yum install gtest* 
+[root@localhost ~]# yum install gtest* 
 ```
 
 * 安装gmock
 ```bash
-[root@localhost src_test]# yum install gmock* 
-```
-
-* 编写测试用例my_test.cpp:
-```
-#include <gtest/gtest.h>
-
-int add(int lhs, int rhs) { return lhs + rhs; }
-
-int main(int argc, char const *argv[]) {
-
-    EXPECT_EQ(add(1,1), 2); // PASS
-    EXPECT_EQ(add(1,1), 1) << "FAILED: EXPECT: 2, but given 1";; // FAILDED
-
-    return 0;
-}
-```
-
-* 通过如下命令编译测试用例:
-```bash
-[root@localhost src_test]# g++ my_test.cpp -o test -I /usr/include/gtest -lgtest
+[root@localhost ~]# yum install gmock* 
 ```
 
 * 断言
@@ -87,5 +67,54 @@ INSTANTIATE_TEST_SUITE_P(
     ParameterizedTestFixtureInstantiation,  // 名称前缀
     MyTestFixture,                          // 参数化的测试fixture类
     ::testing::Values(1, 2, 3));            // 提供参数值列表
+
+```
+
+* 主函数
+```bash
+int main(int argc, char** argv) {
+    testing::InitGoogleTest(&argc, argv);
+
+    // Runs all tests using Google Test.
+    return RUN_ALL_TESTS();
+ }
+```
+
+* 编译运行
+```bash
+[root@localhost ~]# g++ GtestTest.cpp GtestTest_Unittest.cpp  -o GtestTest_Unittest  -I /usr/include/gtest -lgtest
+[root@localhost ~]# ./GtestTest_Unittest
+[==========] Running 9 tests from 3 test cases.
+[----------] Global test environment set-up.
+[----------] 3 tests from FactorialTest
+[ RUN      ] FactorialTest.Negative
+[       OK ] FactorialTest.Negative (0 ms)
+[ RUN      ] FactorialTest.Zero
+[       OK ] FactorialTest.Zero (0 ms)
+[ RUN      ] FactorialTest.Positive
+[       OK ] FactorialTest.Positive (0 ms)
+[----------] 3 tests from FactorialTest (0 ms total)
+
+[----------] 3 tests from IsPrimeTest
+[ RUN      ] IsPrimeTest.Negative
+[       OK ] IsPrimeTest.Negative (0 ms)
+[ RUN      ] IsPrimeTest.Trivial
+[       OK ] IsPrimeTest.Trivial (0 ms)
+[ RUN      ] IsPrimeTest.Positive
+[       OK ] IsPrimeTest.Positive (0 ms)
+[----------] 3 tests from IsPrimeTest (0 ms total)
+
+[----------] 3 tests from FileAuditTest
+[ RUN      ] FileAuditTest.ReturnsTrueForExistingAudit1
+[       OK ] FileAuditTest.ReturnsTrueForExistingAudit1 (11 ms)
+[ RUN      ] FileAuditTest.ReturnsFalseForNonexistentAudit0
+[       OK ] FileAuditTest.ReturnsFalseForNonexistentAudit0 (18 ms)
+[ RUN      ] FileAuditTest.ReturnsFalseForNonexistentAudit
+[       OK ] FileAuditTest.ReturnsFalseForNonexistentAudit (12 ms)
+[----------] 3 tests from FileAuditTest (41 ms total)
+
+[----------] Global test environment tear-down
+[==========] 9 tests from 3 test cases ran. (41 ms total)
+[  PASSED  ] 9 tests.
 
 ```
